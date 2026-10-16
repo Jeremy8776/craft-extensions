@@ -11,6 +11,15 @@
 //! - The third-party path is behind the `third-party` cargo feature, off by default.
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
+pub mod id;
+pub mod index;
+pub mod manifest;
+pub mod palette;
+pub mod path;
+pub mod text;
+pub mod tier;
+pub mod version;
+
 #[cfg(test)]
 mod gate_tests {
     /// The third-party path must never be on by default: a release build would then accept outside
