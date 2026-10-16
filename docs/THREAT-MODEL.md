@@ -30,13 +30,13 @@ The tier is assigned by the host from where a package came from. A package canno
 
 | # | Threat | Applies to | Answer |
 |---|---|---|---|
-| T1 | Zip bomb: tiny archive, huge output | all | **Phase 1, not built yet.** Caps on entry count, per-entry and total size, and compression ratio, enforced while streaming. |
-| T2 | Path escape: `..`, absolute paths, drive letters, links, device names, trailing dots, case collisions | all | **Phase 1, not built yet.** Paths are validated by the manifest and again against the archive; links and encrypted entries refused. |
-| T3 | Extra or missing files: archive holds more than the manifest lists | all | **Phase 1, not built yet.** The archive must match the manifest exactly, each file by SHA-256 and size. |
-| T4 | Hostile text: bidi overrides, zero-width and control characters in names | all | **Phase 1, not built yet.** Display text is validated by character class. |
-| T5 | Lookalike or homoglyph ids | all | **Phase 1, not built yet.** Ids are lowercase ASCII from a small alphabet. |
+| T1 | Zip bomb: tiny archive, huge output | all | **Built and tested (phase 1).** Caps on entry count, per-entry and total size, and compression ratio, enforced while streaming. |
+| T2 | Path escape: `..`, absolute paths, drive letters, links, device names, trailing dots, case collisions | all | **Built and tested (phase 1).** Paths are validated by the manifest and again against the archive; links and encrypted entries refused. |
+| T3 | Extra or missing files: archive holds more than the manifest lists | all | **Built and tested (phase 1).** The archive must match the manifest exactly, each file by SHA-256 and size. |
+| T4 | Hostile text: bidi overrides, zero-width and control characters in names | all | **Built and tested (phase 1).** Display text is validated by character class. |
+| T5 | Lookalike or homoglyph ids | all | **Built and tested (phase 1).** Ids are lowercase ASCII from a small alphabet. |
 | T6 | Impersonating a first-party extension | third party | **G1 reserved namespaces.** Ids under first-party prefixes only from the first-party tier. |
-| T7 | Unreadable text from a theme (low contrast) | theme | **Phase 1, not built yet.** Contrast check at install; theme overrides are validated too. |
+| T7 | Unreadable text from a theme (low contrast) | theme | **Built and tested (phase 1).** Contrast check at install and again whenever an app loads the theme. Per-app overrides use names only the app knows, so each app re-checks its own pairs. |
 | T8 | Malicious or buggy plug-in: infinite loop, memory blowup, escape | plug-in | The host's sandbox limits, plus **G6**: permissions must be empty and any host import is refused, at install and again on every load. |
 | T9 | Hostile resource file exploiting an importer | resource | **G8** fuzzing of each importer before its resource type ships. |
 | T10 | Crash on any parser input | all | **G8** fuzz targets and a panic hunt; crate roots deny `unwrap`, `expect`, `panic`. |
@@ -55,11 +55,11 @@ The tier is assigned by the host from where a package came from. A package canno
 
 | Gate | What |
 |---|---|
-| G1 | Reserved first-party namespaces; lookalike ids refused |
+| G1 | Reserved first-party namespaces; lookalike ids refused (built: ids, tier check, index) |
 | G2 | Publisher signatures, pinned and rotatable keys (test keys only) |
 | G3 | Signed, expiring index metadata; no rollback or freeze |
 | G4 | Revocation list that disables a package in every app |
-| G5 | Tier gate behind a cargo feature, off by default, guarded by a test |
+| G5 | Tier gate behind a cargo feature, off by default, guarded by a test (built) |
 | G6 | Empty permissions; plug-ins re-validated at install and every load |
 | G7 | No silent key, permission or version change |
 | G8 | Fuzz targets and a panic hunt over every parser |
